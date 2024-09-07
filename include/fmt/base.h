@@ -754,7 +754,7 @@ class basic_specs {
   char fill_data_[max_fill_size] = {' '};
 
   FMT_CONSTEXPR void set_fill_size(size_t size) {
-    data_ = (data_ & ~fill_size_mask) | (size << fill_size_shift);
+    data_ = (data_ & ~fill_size_mask) | (static_cast<unsigned long>(size) << fill_size_shift);
   }
 
  public:
@@ -1769,6 +1769,7 @@ struct compile_string {};
 
 template <typename T, typename Char>
 FMT_VISIBILITY("hidden")  // Suppress an ld warning on macOS (#3769).
+FMT_MSC_WARNING(suppress : 4702) // Suppress MSVC unreachable warning
 FMT_CONSTEXPR auto invoke_parse(parse_context<Char>& ctx) -> const Char* {
   using mapped_type = remove_cvref_t<mapped_t<T, Char>>;
 #if defined(__cpp_if_constexpr)
@@ -2785,7 +2786,7 @@ template <typename Char, typename... T> class fstring {
   const Char* str_;
   size_t size_;
 
-  static constexpr int num_static_named_args =
+  static constexpr size_t num_static_named_args =
       detail::count_static_named_args<T...>();
 
   using checker = detail::format_string_checker<
