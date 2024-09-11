@@ -720,7 +720,7 @@ class basic_specs {
     max_fill_size = 4
   };
 
-  unsigned long data_ = 1 << fill_size_shift;
+  size_t data_ = 1 << fill_size_shift;
 
   // Character (code unit) type is erased to prevent template bloat.
   char fill_data_[max_fill_size] = {' '};
@@ -2711,7 +2711,7 @@ inline auto runtime(string_view s) -> runtime_format_string<> { return {{s}}; }
 /// A compile-time format string.
 template <typename... T> struct fstring {
  private:
-  static constexpr int num_static_named_args =
+  static constexpr size_t num_static_named_args =
       detail::count_static_named_args<T...>();
 
   using checker = detail::format_string_checker<
